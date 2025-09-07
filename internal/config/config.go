@@ -60,7 +60,7 @@ func Read() (Config, error) {
 }
 
 func getConfigFilePath() (string, error) {
-	const configFileName = "gatorconfig.json"
+	const configFileName = "blogger/gatorconfig.json"
 	homepath, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("error with home directory")
