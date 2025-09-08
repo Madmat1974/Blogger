@@ -12,9 +12,9 @@ type Config struct {
 	CurrentUserName string `json:"current_user_name"`
 }
 
-func (cfg Config) SetUser(user_name string) error {
+func (cfg *Config) SetUser(user_name string) error {
 	cfg.CurrentUserName = user_name
-	err := write(cfg)
+	err := write(*cfg)
 	if err != nil {
 		return err
 	}
@@ -45,28 +45,33 @@ func Read() (Config, error) {
 		return Config{}, err
 	}
 
-	fBytes, err := os.ReadFile(filePath)
+	b, err := os.ReadFile(filePath)
 	if err != nil {
-		return Config{}, fmt.Errorf("error opening file: %v", err)
+		if os.IsNotExist(err) {
+			// No file yet: return default/empty config
+			return Config{}, nil
+		}
+		return Config{}, fmt.Errorf("error opening file: %w", err)
 	}
 
 	var cfg Config
-	err = json.Unmarshal(fBytes, &cfg)
-	if err != nil {
-		return Config{}, fmt.Errorf("error unmarshaling JSON: %v", err)
+	if err := json.Unmarshal(b, &cfg); err != nil {
+		return Config{}, fmt.Errorf("error unmarshaling JSON: %w", err)
 	}
-
 	return cfg, nil
 }
 
 func getConfigFilePath() (string, error) {
-	const configFileName = "blogger/gatorconfig.json"
-	homepath, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("error with home directory")
+	const configFileName = ".gatorconfig.json"
+
+	// Optional override for tricky environments
+	if p := os.Getenv("GATOR_CONFIG"); p != "" {
+		return p, nil
 	}
 
-	fpath := filepath.Join(homepath, configFileName)
-	return fpath, nil
-
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("get home dir: %w", err)
+	}
+	return filepath.Join(home, configFileName), nil
 }
