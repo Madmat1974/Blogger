@@ -35,6 +35,8 @@ func main() {
 		handlers: make(map[string]func(*state, command) error),
 	}
 
+	cmds.register("reset", handlerReset)
+
 	cmds.register("register", handlerRegister)
 
 	cmds.register("login", handlerLogin)
