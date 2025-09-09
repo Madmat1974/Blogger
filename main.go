@@ -2,22 +2,41 @@ package main
 
 import (
 	"Blogger/internal/config"
+	"Blogger/internal/database"
+	"database/sql"
 	"fmt"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 
 	cfg, err := config.Read()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("error reading config:", err)
+		os.Exit(1)
 	}
 
-	s := &state{cfg: &cfg}
+	db, err := sql.Open("postgres", cfg.DbURL)
+	if err != nil {
+		fmt.Println("error opening db:", err)
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	dbQueries := database.New(db)
+
+	s := &state{
+		db:  dbQueries,
+		cfg: &cfg}
 
 	cmds := &commands{
 		handlers: make(map[string]func(*state, command) error),
 	}
+
+	cmds.register("register", handlerRegister)
+
 	cmds.register("login", handlerLogin)
 	if len(os.Args) < 2 {
 		fmt.Println("wrong input")
