@@ -36,8 +36,8 @@ func main() {
 	}
 
 	cmds.register("reset", handlerReset)
-
 	cmds.register("register", handlerRegister)
+	cmds.register("users", handlerGetUsers)
 
 	cmds.register("login", handlerLogin)
 	if len(os.Args) < 2 {
