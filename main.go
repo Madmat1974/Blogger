@@ -40,6 +40,7 @@ func main() {
 	cmds.register("users", handlerGetUsers)
 	cmds.register("login", handlerLogin)
 	cmds.register("agg", handlerAgg)
+	cmds.register("addfeed", handlerAddFeed)
 
 	if len(os.Args) < 2 {
 		fmt.Println("wrong input")
