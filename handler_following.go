@@ -18,7 +18,7 @@ func handlerFollowing(s *state, cmd command) error {
 
 	ffs, err := s.db.GetFeedFollowsForUser(ctx, user.ID)
 	if err != nil {
-		return fmt.Errorf("could not list follows: /w", err)
+		return fmt.Errorf("could not list follows: %w", err)
 	}
 
 	for _, ff := range ffs {
