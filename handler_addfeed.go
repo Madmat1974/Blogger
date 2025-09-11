@@ -34,6 +34,16 @@ func handlerAddFeed(s *state, cmd command) error {
 		return fmt.Errorf("create feed: %w", err)
 	}
 
+	//auto-following
+	_, err = s.db.CreateFeedFollow(ctx, database.CreateFeedFollowParams{
+		ID:     uuid.New(),
+		UserID: u.ID,
+		FeedID: f.ID,
+	})
+	if err != nil {
+		return fmt.Errorf("cound not auto-follow feed: %w", err)
+	}
+
 	fmt.Println("ID:", f.ID)
 	fmt.Println("CreatedAt:", f.CreatedAt)
 	fmt.Println("UpdatedAt:", f.UpdatedAt)
