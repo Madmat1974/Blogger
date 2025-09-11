@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	ctx := context.Background()
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("usage: %s <url>", cmd.name)
@@ -19,11 +19,6 @@ func handlerFollow(s *state, cmd command) error {
 		return fmt.Errorf("please login first")
 	}
 	//check database as well
-	user, err := s.db.GetUser(ctx, s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("current user not found: %w", err)
-	}
-
 	f, err := s.db.GetFeedByURL(ctx, url)
 	if err != nil {
 		return fmt.Errorf("feed not found for usr: %s", url)

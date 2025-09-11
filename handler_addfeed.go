@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	ctx := context.Background()
 
 	if len(cmd.args) != 2 {
@@ -17,18 +17,13 @@ func handlerAddFeed(s *state, cmd command) error {
 	name := cmd.args[0]
 	url := cmd.args[1]
 
-	u, err := s.db.GetUser(ctx, s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("get user %q: %w", s.cfg.CurrentUserName, err)
-	}
-
 	id := uuid.New()
 
 	f, err := s.db.CreateFeed(ctx, database.CreateFeedParams{
 		ID:     id,
 		Name:   name,
 		Url:    url,
-		UserID: u.ID,
+		UserID: user.ID,
 	})
 	if err != nil {
 		return fmt.Errorf("create feed: %w", err)
@@ -37,7 +32,7 @@ func handlerAddFeed(s *state, cmd command) error {
 	//auto-following
 	_, err = s.db.CreateFeedFollow(ctx, database.CreateFeedFollowParams{
 		ID:     uuid.New(),
-		UserID: u.ID,
+		UserID: user.ID,
 		FeedID: f.ID,
 	})
 	if err != nil {

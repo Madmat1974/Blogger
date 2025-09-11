@@ -1,21 +1,17 @@
 package main
 
 import (
+	"Blogger/internal/database"
 	"context"
 	"fmt"
 )
 
-func handlerFollowing(s *state, cmd command) error {
+func handlerFollowing(s *state, cmd command, user database.User) error {
 	ctx := context.Background()
 
 	if s.cfg.CurrentUserName == "" {
 		return fmt.Errorf("please login first")
 	}
-	user, err := s.db.GetUser(ctx, s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("current user not found: %w", err)
-	}
-
 	ffs, err := s.db.GetFeedFollowsForUser(ctx, user.ID)
 	if err != nil {
 		return fmt.Errorf("could not list follows: %w", err)
