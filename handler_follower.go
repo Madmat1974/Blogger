@@ -21,7 +21,7 @@ func handlerFollow(s *state, cmd command, user database.User) error {
 	//check database as well
 	f, err := s.db.GetFeedByURL(ctx, url)
 	if err != nil {
-		return fmt.Errorf("feed not found for usr: %s", url)
+		return fmt.Errorf("feed not found for user: %s", url)
 	}
 
 	ff, err := s.db.CreateFeedFollow(ctx, database.CreateFeedFollowParams{
