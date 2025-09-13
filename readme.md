@@ -1,3 +1,5 @@
+gator
+
 Dependacies required: Postgres and Go installed to run program
 Go git github.com/Madmat1974/Blogger to clone the files
 Within project director (using cd command), use command <go install .> without the <> tags
