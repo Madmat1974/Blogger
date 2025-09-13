@@ -1,12 +1,18 @@
 package main
 
 import (
+	"Blogger/internal/database"
 	"context"
+	"database/sql"
 	"encoding/xml"
 	"fmt"
 	"html"
 	"io"
 	"net/http"
+	"strings"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type RSSFeed struct {
@@ -57,4 +63,42 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		feed.Channel.Item[i].Description = html.UnescapeString(feed.Channel.Item[i].Description)
 	}
 	return &feed, nil
+}
+
+func postFromRSSItem(item RSSItem, feedID uuid.UUID) database.CreatePostParams {
+	return database.CreatePostParams{
+		ID:          uuid.New(),
+		Title:       toNullString(item.Title),
+		Url:         strings.TrimSpace(item.Link),
+		Description: toNullString(item.Description),
+		PublishedAt: parsePubDate(item.PubDate),
+		FeedID:      feedID,
+	}
+}
+
+// helper functions for postFromRSSItem
+func toNullString(s string) sql.NullString {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return sql.NullString{Valid: false}
+	}
+	return sql.NullString{String: s, Valid: true}
+}
+
+func parsePubDate(s string) sql.NullTime {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return sql.NullTime{Valid: false}
+	}
+	layouts := []string{
+		time.RFC1123Z, time.RFC1123,
+		time.RFC822Z, time.RFC822,
+		time.RFC3339, "Mon, 02 Jan 2006 15:04:05 MST",
+	}
+	for _, layout := range layouts {
+		if t, err := time.Parse(layout, s); err == nil {
+			return sql.NullTime{Time: t.UTC(), Valid: true}
+		}
+	}
+	return sql.NullTime{Valid: false}
 }

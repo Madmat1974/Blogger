@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 func handlerAgg(s *state, cmd command) error {
@@ -49,7 +52,15 @@ func scrapeFeeds(ctx context.Context, s *state) error {
 	}
 
 	for _, it := range f.Channel.Item {
-		fmt.Println(it.Title)
+		params := postFromRSSItem(it, feed.ID)
+		if _, err := s.db.CreatePost(ctx, params); err != nil {
+			var pqErr *pq.Error
+			if errors.As(err, &pqErr) && pqErr.Code == "23505" { // unique_violation
+				continue
+			}
+			fmt.Printf("create post error feed=%s url=%s err=%v\n", feed.ID, params.Url, err)
+			continue
+		}
 	}
 	return nil
 }
