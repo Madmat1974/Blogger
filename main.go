@@ -1,10 +1,10 @@
 package main
 
 import (
-	"Blogger/internal/config"
-	"Blogger/internal/database"
 	"database/sql"
 	"fmt"
+	"gator/internal/config"
+	"gator/internal/database"
 	"os"
 
 	_ "github.com/lib/pq"

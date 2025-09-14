@@ -1,9 +1,9 @@
 package main
 
 import (
-	"Blogger/internal/database"
 	"context"
 	"fmt"
+	"gator/internal/database"
 )
 
 func handlerFollowing(s *state, cmd command, user database.User) error {

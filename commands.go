@@ -1,10 +1,10 @@
 package main
 
 import (
-	"Blogger/internal/config"
-	"Blogger/internal/database"
 	"context"
 	"fmt"
+	"gator/internal/config"
+	"gator/internal/database"
 )
 
 type state struct {

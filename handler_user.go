@@ -1,11 +1,11 @@
 package main
 
 import (
-	"Blogger/internal/database"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
+	"gator/internal/database"
 	"os"
 	"time"
 

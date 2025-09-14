@@ -1,4 +1,4 @@
-module Blogger
+module gator
 
 go 1.25.1
 
