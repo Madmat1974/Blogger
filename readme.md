@@ -8,8 +8,7 @@ cd into the gator folder and type go install .
 
 Setup a gator config file by creating a file named .gatorconfig.json in your home directory. This file can be created by using a Text Editor or a command-line editor in Linux(such as Nano or Emacs). The purpose of the file is so that the gator application knows the requirements for accessing the Postgres database. Contents of the file should include a format as:
 {
-  "db_url": "connection_string_goes_here",
-  "current_user_name": "username_goes_here"
+  "db_url": "postgres://username:@localhost:5432/database?sslmode=disable"
 }
 
 To use gator, precede any commands with the word gator. Example for calling commands with description:
@@ -23,6 +22,6 @@ gator feeds                       This lists all the feeds that the logged-in us
 gator follow <url>                Similar to gator addfeed command, but allows a user to follow a feed just by the URL and not give it a name
 gator following                   Lists the feeds that are being followed by current user by feed name
 gator unfollow <url>              Deletes feeds that users are following from the database
-gator browse [limit]              gator browse, by itself, will default to showing two feed posts that are being followed by the user. A max of five post feeds can be displayed. Usage: gator browse 
+gator browse [limit]              gator browse, by itself, will default to showing two feed posts that are being followed by the user. A max of five post feeds can be displayed. 
 
 
