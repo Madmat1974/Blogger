@@ -1,25 +1,27 @@
-gator
+gator is a command line interface (CLI) to add users, of where the users can fetch various RSS feeds, store such feeds in a database, and post such feeds to the terminal in a user defined interval.
 
-Dependacies required: Postgres and Go installed to run program
-Go git github.com/Madmat1974/Blogger to clone the files
-Within project director (using cd command), use command <go install .> without the <> tags
-Setup a Blogger "Gator" config file by creating a file named .gatorconfig.json in your home directory. Ensure file is populated with the following content:
+Dependacies required: Postgres and Go installed.
 
+git clone https://github.com/Madmat1974/gator to clone the application.
+
+cd into the gator folder and type go install .
+
+Setup a gator config file by creating a file named .gatorconfig.json in your home directory. This file can be created by using a Text Editor or a command-line editor in Linux(such as Nano or Emacs). The purpose of the file is so that the gator application knows the requirements for accessing the Postgres database. Contents of the file should include a format as:
 {
-  "db_url": "postgres://example"
+  postgres://username:@localhost:5432/database?sslmode=disable
 }
 
-this will hold the url location of the Postgres database, and the file will be populated as needed for users via the application
+To use gator, precede any commands with the word gator. Example for calling commands with description:
+gator reset                       This command removes all users and feeds from the database
+gator register <name>             This command adds a user to the database
+gator users                       This command lists all users stored in the database with an indicator of the user that is actually logged in
+gator login                       This command logs in the user
+gator agg <time interval>         This command pulls feeds that are set by the current user and displays them at the time interval to the terminal. Example gator agg 30s, gator agg 1m, gator agg 1h
+gator addfeed "feedname" feedurl  Example: gator addfeed "Fox News" https://moxie.foxnews.com/google-publisher/latest.xml  The feedname is user-defined and feed is auto-followed.
+gator feeds                       This lists all the feeds that the logged-in user is following
+gator follow                      Similar to gator addfeed command, but allows a user to follow a feed just by the URL and not give it a name
+gator following                   Lists the feeds that are being followed by all users
+gator unfollow                    Deletes feeds that users are following from the database
+gator browse                      gator browse, by itself, will default to showing two feed posts that are being followed by the user. A max of five post feeds can be displayed. Usage: gator browse 5
 
-commands avail: reset           -Removes all users and feeds from the db
-                register        -adds a user useage "register $" where $ is username
-                users           -lists all users in db with indicator who is logged in
-                login           -logs in the user, usage "login $" $ is the username
-                agg             -pull feeds by time and display, usage agg 10s (1m, 1hr)
-                addfeed         -addfeed "give it a name" url
-                feeds           -lists the feeds that the logged in user is polling from
-                follow          -current user can follow by command follow <url>
-                following       -lists the name of the feeds that are being followed
-                unfollow        -removes feeds that are followed from db
-                browse          -posts feeds to display, up to 5 posts with browse 5
 
