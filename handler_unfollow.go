@@ -5,7 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"gator/internal/database"
+
+	"github.com/Madmat1974/Gator/internal/database"
 )
 
 func handlerUnfollow(s *state, cmd command, user database.User) error {

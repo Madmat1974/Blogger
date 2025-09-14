@@ -5,9 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"gator/internal/database"
 	"os"
 	"time"
+
+	"github.com/Madmat1974/Gator/internal/database"
 
 	"github.com/google/uuid"
 )
